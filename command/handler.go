@@ -1,8 +1,8 @@
 package command
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 )
 
 var commands []Command
@@ -11,10 +11,10 @@ func RegisterCommand(c Command) {
 	commands = append(commands, c)
 }
 
-func HandleCommand(name string) error {
+func HandleCommand(name string, args []string) error {
 	for _, c := range commands {
 		if c.GetName() == name {
-			return c.Execute()
+			return c.Execute(args)
 		}
 	}
 

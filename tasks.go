@@ -1,9 +1,9 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"github.com/aziule/tasks/command"
+	"os"
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err := command.HandleCommand(os.Args[1])
+	err := command.HandleCommand(os.Args[1], os.Args[2:])
 
 	if err != nil {
 		fmt.Println(err)
