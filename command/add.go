@@ -1,10 +1,10 @@
 package command
 
 import (
-	"fmt"
 	"github.com/aziule/tasks/storage"
 	"github.com/aziule/tasks/task"
 	"strings"
+	"errors"
 )
 
 type AddCommand struct {
@@ -15,14 +15,17 @@ func (c *AddCommand) GetName() string {
 }
 
 func (c *AddCommand) Execute(args []string) error {
-	fmt.Println("Add a task")
 	err, t := task.NewTask(strings.Join(args, " "))
 
 	if err != nil {
-		return err
+		return errors.New("An error occured when creating the task")
 	}
 
-	storage.CreateTask(t)
+	err = storage.CreateTask(t)
+
+	if err != nil {
+		return errors.New("An error occured when saving the task")
+	}
 
 	return nil
 }
