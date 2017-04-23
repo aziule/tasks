@@ -2,13 +2,15 @@ package storage
 
 import (
 	"fmt"
-	"github.com/aziule/tasks/task"
 	"os"
 	"encoding/csv"
-	"strconv"
 )
 
 const FILE_NAME = "tasks.csv"
+
+type Storable interface {
+	ToStringSlice() []string
+}
 
 func init() {
 	if _, err := os.Stat(FILE_NAME); err != nil {
@@ -23,7 +25,7 @@ func init() {
 	}
 }
 
-func CreateTask(t *task.Task) error {
+func Add(s Storable) error {
 	file, err := os.OpenFile(FILE_NAME, os.O_RDWR | os.O_APPEND, 0660)
 
 	defer file.Close()
@@ -35,17 +37,9 @@ func CreateTask(t *task.Task) error {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	if err := writer.Write(taskToCsv(t)); err != nil {
+	if err := writer.Write(s.ToStringSlice()); err != nil {
 		return err
 	}
 
-
 	return nil
-}
-
-func taskToCsv(t *task.Task) []string {
-	return []string{
-		strconv.Itoa(t.Id),
-		t.Text,
-	}
 }

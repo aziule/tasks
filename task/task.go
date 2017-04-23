@@ -3,6 +3,7 @@ package task
 import (
 	"errors"
 	"fmt"
+	"strconv"
 )
 
 type Task struct {
@@ -18,4 +19,11 @@ func NewTask(text string) (error, *Task) {
 	id := 42
 
 	return nil, &Task{id, text}
+}
+
+func (t *Task) ToStringSlice() []string {
+	return []string{
+		strconv.Itoa(t.Id),
+		t.Text,
+	}
 }

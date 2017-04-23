@@ -21,7 +21,7 @@ func (c *AddCommand) Execute(args []string) error {
 		return errors.New("An error occured when creating the task")
 	}
 
-	err = storage.CreateTask(t)
+	err = storage.Add(t)
 
 	if err != nil {
 		return errors.New("An error occured when saving the task")
