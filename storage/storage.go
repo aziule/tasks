@@ -24,7 +24,7 @@ func init() {
 	}
 }
 
-func Add(t *task.Task) error {
+func Save(t *task.Task) error {
 	file, err := os.OpenFile(FILE_NAME, os.O_RDWR | os.O_APPEND, 0660)
 
 	defer file.Close()
@@ -36,13 +36,15 @@ func Add(t *task.Task) error {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	taskId, err := nextId()
+	if t.Id == 0 {
+		taskId, err := nextId()
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
+
+		t.Id = taskId
 	}
-
-	t.Id = taskId
 
 	if err := writer.Write(toStringSlice(t)); err != nil {
 		return err

@@ -15,13 +15,13 @@ func (c *AddCommand) GetName() string {
 }
 
 func (c *AddCommand) Execute(args []string) error {
-	err, t := task.NewTask(strings.Join(args, " "))
+	err, t := task.NewTask(0, strings.Join(args, " "))
 
 	if err != nil {
 		return errors.New("An error occured when creating the task")
 	}
 
-	err = storage.Add(t)
+	err = storage.Save(t)
 
 	if err != nil {
 		return errors.New("An error occured when saving the task")
