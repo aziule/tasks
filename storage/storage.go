@@ -24,7 +24,12 @@ func init() {
 	}
 }
 
-func Save(t *task.Task) error {
+func Update(t *task.Task) error {
+	fmt.Println("Should update task", t)
+	return nil
+}
+
+func Add(t *task.Task) error {
 	file, err := os.OpenFile(FILE_NAME, os.O_RDWR | os.O_APPEND, 0660)
 
 	defer file.Close()
