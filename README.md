@@ -9,10 +9,10 @@ effectively manage daily tasks, measure the time spent on a given task, etc.
 
 ## Roadmap
 
-- [ ] Create the core of the app
-- [ ] Add a task
+- [x] Create the core of the app
+- [x] Add a task
 - [ ] Mark a task as done
 - [ ] View current tasks
-- [ ] Edit a task
+- [x] Edit a task
 - [ ] Count the time spent on a task
 - [ ] Integrate the time spent on a task with Jira
