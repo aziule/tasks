@@ -46,7 +46,7 @@ func Save(t *task.Task) error {
 		t.Id = taskId
 	}
 
-	if err := writer.Write(toStringSlice(t)); err != nil {
+	if err := writer.Write(toCsvRecord(t)); err != nil {
 		return err
 	}
 
@@ -79,12 +79,16 @@ func nextId() (int, error) {
 		lastRecord = record
 	}
 
+	if len(lastRecord) == 0 {
+		return 1, nil
+	}
+
 	lastId, _ := strconv.Atoi(lastRecord[0])
 
 	return lastId + 1, nil
 }
 
-func toStringSlice(t *task.Task) []string {
+func toCsvRecord(t *task.Task) []string {
 	return []string{
 		strconv.Itoa(t.Id),
 		t.Text,
