@@ -7,6 +7,7 @@ import (
 	"github.com/aziule/tasks/task"
 	"strconv"
 	"io"
+	"io/ioutil"
 )
 
 const FILE_NAME = "tasks.csv"
@@ -25,7 +26,51 @@ func init() {
 }
 
 func Update(t *task.Task) error {
-	fmt.Println("Should update task", t)
+	file, err := os.OpenFile(FILE_NAME, os.O_RDWR, 0660)
+
+	defer file.Close()
+
+	if err != nil {
+		return err
+	}
+
+	reader := csv.NewReader(file)
+	tasks := []task.Task{}
+
+	for {
+		record, err := reader.Read()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return err
+		}
+
+		currentTask := csvToTask(record)
+
+		if currentTask.Id == t.Id {
+			currentTask.Text = t.Text
+		}
+
+		tasks = append(tasks, currentTask)
+	}
+
+	if err := ioutil.WriteFile(FILE_NAME, []byte{}, 0664); err != nil {
+		return err
+	}
+
+	// todo: use a bulk insert instead of multiple Add() methods, as it
+	// will open and close the file for every task and can be very slow
+	for _, t := range tasks {
+		err := Add(&t)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -51,7 +96,7 @@ func Add(t *task.Task) error {
 		t.Id = taskId
 	}
 
-	if err := writer.Write(toCsvRecord(t)); err != nil {
+	if err := writer.Write(taskToCsv(t)); err != nil {
 		return err
 	}
 
@@ -93,9 +138,18 @@ func nextId() (int, error) {
 	return lastId + 1, nil
 }
 
-func toCsvRecord(t *task.Task) []string {
+func taskToCsv(t *task.Task) []string {
 	return []string{
 		strconv.Itoa(t.Id),
 		t.Text,
+	}
+}
+
+func csvToTask(record []string) task.Task {
+	taskId, _ := strconv.Atoi(record[0])
+
+	return task.Task{
+		taskId,
+		record[1],
 	}
 }
