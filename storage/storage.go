@@ -54,27 +54,21 @@ func Update(t *task.Task) error {
 			currentTask.Text = t.Text
 		}
 
-		tasks = append(tasks, currentTask)
+		tasks = append(tasks, *currentTask)
 	}
 
 	if err := ioutil.WriteFile(FILE_NAME, []byte{}, 0664); err != nil {
 		return err
 	}
 
-	// todo: use a bulk insert instead of multiple Add() methods, as it
-	// will open and close the file for every task and can be very slow
-	for _, t := range tasks {
-		err := Add(&t)
-
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return addMultiple(tasks)
 }
 
 func Add(t *task.Task) error {
+	return addMultiple([]task.Task{*t})
+}
+
+func addMultiple(tasks []task.Task) error {
 	file, err := os.OpenFile(FILE_NAME, os.O_RDWR | os.O_APPEND, 0660)
 
 	defer file.Close()
@@ -86,18 +80,20 @@ func Add(t *task.Task) error {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	if t.Id == 0 {
-		taskId, err := nextId()
+	for _, t := range tasks {
+		if t.Id == 0 {
+			taskId, err := nextId()
 
-		if err != nil {
-			return err
+			if err != nil {
+				return err
+			}
+
+			t.Id = taskId
 		}
 
-		t.Id = taskId
-	}
-
-	if err := writer.Write(taskToCsv(t)); err != nil {
-		return err
+		if err := writer.Write(taskToCsv(&t)); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -145,10 +141,10 @@ func taskToCsv(t *task.Task) []string {
 	}
 }
 
-func csvToTask(record []string) task.Task {
+func csvToTask(record []string) *task.Task {
 	taskId, _ := strconv.Atoi(record[0])
 
-	return task.Task{
+	return &task.Task{
 		taskId,
 		record[1],
 	}
