@@ -12,7 +12,7 @@ effectively manage daily tasks, measure the time spent on a given task, etc.
 - [x] Create the core of the app
 - [x] Add a task
 - [ ] Mark a task as done
-- [ ] View current tasks
+- [x] List current tasks
 - [x] Edit a task
 - [ ] Count the time spent on a task
 - [ ] Integrate the time spent on a task with Jira
