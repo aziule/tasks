@@ -52,6 +52,7 @@ func Update(t *task.Task) error {
 		}
 
 		currentTask := csvToTask(record)
+		currentTask.UpdatedAt = time.Now()
 
 		if currentTask.Id == t.Id {
 			currentTask.Text = t.Text
