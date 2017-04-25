@@ -5,6 +5,7 @@ import (
 	"github.com/aziule/tasks/task"
 	"strings"
 	"errors"
+	"fmt"
 )
 
 type AddCommand struct {
@@ -26,6 +27,8 @@ func (c *AddCommand) Execute(args []string) error {
 	if err != nil {
 		return errors.New("An error occured when saving the task")
 	}
+
+	fmt.Printf("Task %d created\n", t.Id)
 
 	return nil
 }
