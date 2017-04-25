@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/ioutil"
 	"errors"
+	"time"
 )
 
 const FILE_NAME = "tasks.csv"
@@ -148,14 +149,20 @@ func taskToCsv(t *task.Task) []string {
 	return []string{
 		strconv.Itoa(t.Id),
 		t.Text,
+		strconv.FormatInt(t.CreatedAt.Unix(), 10),
+		strconv.FormatInt(t.UpdatedAt.Unix(), 10),
 	}
 }
 
 func csvToTask(record []string) *task.Task {
 	taskId, _ := strconv.Atoi(record[0])
+	createdAt, _ := strconv.ParseInt(record[2], 10, 64)
+	updatedAt, _ := strconv.ParseInt(record[3], 10, 64)
 
 	return &task.Task{
 		taskId,
 		record[1],
+		time.Unix(createdAt, 0),
+		time.Unix(updatedAt, 0),
 	}
 }
