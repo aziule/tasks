@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"io"
 	"io/ioutil"
+	"errors"
 )
 
 const FILE_NAME = "tasks.csv"
@@ -36,6 +37,7 @@ func Update(t *task.Task) error {
 
 	reader := csv.NewReader(file)
 	tasks := []*task.Task{}
+	taskExists := false
 
 	for {
 		record, err := reader.Read()
@@ -52,9 +54,14 @@ func Update(t *task.Task) error {
 
 		if currentTask.Id == t.Id {
 			currentTask.Text = t.Text
+			taskExists = true
 		}
 
 		tasks = append(tasks, currentTask)
+	}
+
+	if !taskExists {
+		return errors.New(fmt.Sprintf("Task with id %d does not exist", t.Id))
 	}
 
 	if err := ioutil.WriteFile(FILE_NAME, []byte{}, 0664); err != nil {

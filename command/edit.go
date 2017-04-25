@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"github.com/aziule/tasks/task"
 	"github.com/aziule/tasks/storage"
+	"fmt"
 )
 
 type EditCommand struct {
@@ -26,6 +27,8 @@ func (c *EditCommand) Execute(args []string) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("Task %d edited\n", task.Id)
 
 	return nil
 }
