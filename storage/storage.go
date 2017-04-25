@@ -35,7 +35,7 @@ func Update(t *task.Task) error {
 	}
 
 	reader := csv.NewReader(file)
-	tasks := []task.Task{}
+	tasks := []*task.Task{}
 
 	for {
 		record, err := reader.Read()
@@ -54,7 +54,7 @@ func Update(t *task.Task) error {
 			currentTask.Text = t.Text
 		}
 
-		tasks = append(tasks, *currentTask)
+		tasks = append(tasks, currentTask)
 	}
 
 	if err := ioutil.WriteFile(FILE_NAME, []byte{}, 0664); err != nil {
@@ -65,10 +65,13 @@ func Update(t *task.Task) error {
 }
 
 func Add(t *task.Task) error {
-	return addMultiple([]task.Task{*t})
+	tasks := []*task.Task{}
+	tasks = append(tasks, t)
+
+	return addMultiple(tasks)
 }
 
-func addMultiple(tasks []task.Task) error {
+func addMultiple(tasks []*task.Task) error {
 	file, err := os.OpenFile(FILE_NAME, os.O_RDWR | os.O_APPEND, 0660)
 
 	defer file.Close()
@@ -91,7 +94,7 @@ func addMultiple(tasks []task.Task) error {
 			t.Id = taskId
 		}
 
-		if err := writer.Write(taskToCsv(&t)); err != nil {
+		if err := writer.Write(taskToCsv(t)); err != nil {
 			return err
 		}
 	}
