@@ -27,6 +27,37 @@ func init() {
 	}
 }
 
+func GetAll() ([]*task.Task, error) {
+	file, err := os.Open(FILE_NAME)
+
+	defer file.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	reader := csv.NewReader(file)
+	tasks := []*task.Task{}
+
+	for {
+		record, err := reader.Read()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		currentTask := csvToTask(record)
+
+		tasks = append(tasks, currentTask)
+	}
+
+	return tasks, nil
+}
+
 func Update(t *task.Task) error {
 	file, err := os.OpenFile(FILE_NAME, os.O_RDWR, 0660)
 
