@@ -27,7 +27,39 @@ func init() {
 	}
 }
 
-func GetAll() ([]*task.Task, error) {
+func FindById(id int) (*task.Task, error) {
+	file, err := os.Open(FILE_NAME)
+
+	defer file.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	reader := csv.NewReader(file)
+
+	for {
+		record, err := reader.Read()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		currentTask := csvToTask(record)
+
+		if currentTask.Id == id {
+			return currentTask, nil
+		}
+	}
+
+	return nil, errors.New("No task found with this id")
+}
+
+func GetByStatus(status string) ([]*task.Task, error) {
 	file, err := os.Open(FILE_NAME)
 
 	defer file.Close()
@@ -52,7 +84,9 @@ func GetAll() ([]*task.Task, error) {
 
 		currentTask := csvToTask(record)
 
-		tasks = append(tasks, currentTask)
+		if (currentTask.Status == status) {
+			tasks = append(tasks, currentTask)
+		}
 	}
 
 	return tasks, nil
@@ -87,6 +121,9 @@ func Update(t *task.Task) error {
 
 		if currentTask.Id == t.Id {
 			currentTask.Text = t.Text
+			currentTask.Status = t.Status
+			currentTask.CreatedAt = t.CreatedAt
+			currentTask.UpdatedAt = t.UpdatedAt
 			taskExists = true
 		}
 
@@ -181,6 +218,7 @@ func taskToCsv(t *task.Task) []string {
 	return []string{
 		strconv.Itoa(t.Id),
 		t.Text,
+		t.Status,
 		strconv.FormatInt(t.CreatedAt.Unix(), 10),
 		strconv.FormatInt(t.UpdatedAt.Unix(), 10),
 	}
@@ -188,12 +226,13 @@ func taskToCsv(t *task.Task) []string {
 
 func csvToTask(record []string) *task.Task {
 	taskId, _ := strconv.Atoi(record[0])
-	createdAt, _ := strconv.ParseInt(record[2], 10, 64)
-	updatedAt, _ := strconv.ParseInt(record[3], 10, 64)
+	createdAt, _ := strconv.ParseInt(record[3], 10, 64)
+	updatedAt, _ := strconv.ParseInt(record[4], 10, 64)
 
 	return &task.Task{
 		taskId,
 		record[1],
+		record[2],
 		time.Unix(createdAt, 0),
 		time.Unix(updatedAt, 0),
 	}

@@ -16,7 +16,7 @@ func (c *EditCommand) GetName() string {
 }
 
 func (c *EditCommand) Execute(args []string) error {
-	task, err := parseArgs(args)
+	task, err := c.parseArgs(args)
 
 	if err != nil {
 		return errors.New("Invalid arguments provided")
@@ -33,7 +33,7 @@ func (c *EditCommand) Execute(args []string) error {
 	return nil
 }
 
-func parseArgs(args []string) (task.Task, error) {
+func (c *EditCommand) parseArgs(args []string) (task.Task, error) {
 	var task task.Task
 
 	if len(args) != 2 {
