@@ -22,7 +22,7 @@ func (c *EditCommand) Execute(args []string) error {
 		return errors.New("Invalid arguments provided")
 	}
 
-	err = storage.Update(&task)
+	err = storage.Update(task)
 
 	if err != nil {
 		return err
@@ -33,17 +33,21 @@ func (c *EditCommand) Execute(args []string) error {
 	return nil
 }
 
-func (c *EditCommand) parseArgs(args []string) (task.Task, error) {
-	var task task.Task
-
+func (c *EditCommand) parseArgs(args []string) (*task.Task, error) {
 	if len(args) != 2 {
-		return task, errors.New("Invalid number of arguments")
+		return nil, errors.New("Invalid number of arguments")
 	}
 
 	taskId, err := strconv.Atoi(args[0])
 
 	if err != nil {
-		return task, err
+		return nil, err
+	}
+
+	task, err := storage.FindById(taskId)
+
+	if err != nil {
+		return nil, err
 	}
 
 	task.Id = taskId

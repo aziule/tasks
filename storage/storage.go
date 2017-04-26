@@ -117,13 +117,12 @@ func Update(t *task.Task) error {
 		}
 
 		currentTask := csvToTask(record)
-		currentTask.UpdatedAt = time.Now()
 
 		if currentTask.Id == t.Id {
 			currentTask.Text = t.Text
 			currentTask.Status = t.Status
 			currentTask.CreatedAt = t.CreatedAt
-			currentTask.UpdatedAt = t.UpdatedAt
+			currentTask.UpdatedAt = time.Now()
 			taskExists = true
 		}
 
