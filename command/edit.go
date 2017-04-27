@@ -2,10 +2,9 @@ package command
 
 import (
 	"errors"
-	"strconv"
-	"github.com/aziule/tasks/task"
 	"github.com/aziule/tasks/storage"
 	"fmt"
+	"strings"
 )
 
 type EditCommand struct {
@@ -16,11 +15,17 @@ func (c *EditCommand) GetName() string {
 }
 
 func (c *EditCommand) Execute(args []string) error {
-	task, err := c.parseArgs(args)
+	if len(args) < 2 {
+		return errors.New("Invalid number of arguments")
+	}
+
+	task, err := GetTaskFromArgs(args)
 
 	if err != nil {
 		return errors.New("Invalid arguments provided")
 	}
+
+	task.Text = strings.Join(args[1:], " ")
 
 	err = storage.Update(task)
 
@@ -31,29 +36,6 @@ func (c *EditCommand) Execute(args []string) error {
 	fmt.Printf("Task %d edited\n", task.Id)
 
 	return nil
-}
-
-func (c *EditCommand) parseArgs(args []string) (*task.Task, error) {
-	if len(args) != 2 {
-		return nil, errors.New("Invalid number of arguments")
-	}
-
-	taskId, err := strconv.Atoi(args[0])
-
-	if err != nil {
-		return nil, err
-	}
-
-	task, err := storage.FindById(taskId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	task.Id = taskId
-	task.Text = args[1]
-
-	return task, nil
 }
 
 func init() {
