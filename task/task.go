@@ -32,3 +32,7 @@ func (t *Task) ToString() string {
 func (t *Task) Do() {
 	t.Status = STATUS_DONE
 }
+
+func (t *Task) Undo() {
+	t.Status = STATUS_TODO
+}
