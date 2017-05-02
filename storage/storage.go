@@ -121,6 +121,7 @@ func Update(t *task.Task) error {
 		if currentTask.Id == t.Id {
 			currentTask.Text = t.Text
 			currentTask.Status = t.Status
+			currentTask.MinutesSpent = t.MinutesSpent
 			currentTask.CreatedAt = t.CreatedAt
 			currentTask.UpdatedAt = time.Now()
 			taskExists = true
@@ -218,6 +219,7 @@ func taskToCsv(t *task.Task) []string {
 		strconv.Itoa(t.Id),
 		t.Text,
 		t.Status,
+		strconv.Itoa(t.MinutesSpent),
 		strconv.FormatInt(t.CreatedAt.Unix(), 10),
 		strconv.FormatInt(t.UpdatedAt.Unix(), 10),
 	}
@@ -225,13 +227,15 @@ func taskToCsv(t *task.Task) []string {
 
 func csvToTask(record []string) *task.Task {
 	taskId, _ := strconv.Atoi(record[0])
-	createdAt, _ := strconv.ParseInt(record[3], 10, 64)
-	updatedAt, _ := strconv.ParseInt(record[4], 10, 64)
+	minutesSpent, _ := strconv.Atoi(record[3])
+	createdAt, _ := strconv.ParseInt(record[4], 10, 64)
+	updatedAt, _ := strconv.ParseInt(record[5], 10, 64)
 
 	return &task.Task{
 		taskId,
 		record[1],
 		record[2],
+		minutesSpent,
 		time.Unix(createdAt, 0),
 		time.Unix(updatedAt, 0),
 	}

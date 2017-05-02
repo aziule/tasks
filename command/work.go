@@ -9,6 +9,7 @@ import (
 	"time"
 	"math"
 	"sync"
+	"github.com/aziule/tasks/storage"
 )
 
 type WorkCommand struct {
@@ -45,8 +46,11 @@ func (c *WorkCommand) Execute(args []string) error {
 	}()
 
 	terminationWaiter.Wait()
+	task.MinutesSpent += minutesSpent
 
-	fmt.Printf("%d minute(s) spent working", minutesSpent)
+	storage.Update(task)
+
+	fmt.Printf("%d minute(s) spent working, total is now %d minute(s)", minutesSpent, task.MinutesSpent)
 
 	return nil
 }

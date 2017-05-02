@@ -13,6 +13,7 @@ type Task struct {
 	Id int
 	Text string
 	Status string
+	MinutesSpent int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -22,7 +23,7 @@ func NewTask(id int, text string) (error, *Task) {
 		return errors.New(fmt.Sprintf("The task cannot be empty")), nil
 	}
 
-	return nil, &Task{id, text, STATUS_TODO, time.Now(), time.Now()}
+	return nil, &Task{id, text, STATUS_TODO, 0, time.Now(), time.Now()}
 }
 
 func (t *Task) ToString() string {
