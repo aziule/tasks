@@ -19,3 +19,4 @@ effectively manage daily tasks, measure the time spent on a given task, etc.
 - [ ] Integrate the time spent on a task with Jira
 - [ ] Redact usage doc
 - [ ] Test everything
+- [ ] Switch to a JSON storage
