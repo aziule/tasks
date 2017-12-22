@@ -3,12 +3,13 @@ package command
 import (
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
-	"math"
-	"sync"
+
 	"github.com/aziule/tasks/storage"
 )
 
@@ -37,7 +38,7 @@ func (c *WorkCommand) Execute(args []string) error {
 	minutesSpent := 0
 
 	go func() {
-		<- ch
+		<-ch
 		end := time.Now()
 
 		seconds := end.Unix() - start.Unix()

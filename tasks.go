@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/aziule/tasks/command"
 	"os"
+
+	"github.com/aziule/tasks/command"
 )
 
 func main() {

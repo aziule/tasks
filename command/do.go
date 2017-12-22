@@ -2,8 +2,9 @@ package command
 
 import (
 	"errors"
-	"github.com/aziule/tasks/storage"
 	"fmt"
+
+	"github.com/aziule/tasks/storage"
 )
 
 type DoCommand struct {

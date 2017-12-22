@@ -1,10 +1,11 @@
 package command
 
 import (
-	"github.com/aziule/tasks/task"
 	"errors"
 	"strconv"
+
 	"github.com/aziule/tasks/storage"
+	"github.com/aziule/tasks/task"
 )
 
 type Command interface {

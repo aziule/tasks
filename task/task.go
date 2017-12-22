@@ -10,12 +10,12 @@ const STATUS_TODO = "todo"
 const STATUS_DONE = "done"
 
 type Task struct {
-	Id int
-	Text string
-	Status string
+	Id           int
+	Text         string
+	Status       string
 	MinutesSpent int
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 func NewTask(id int, text string) (error, *Task) {

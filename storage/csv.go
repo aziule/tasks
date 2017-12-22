@@ -1,22 +1,23 @@
 package storage
 
 import (
-	"fmt"
-	"os"
 	"encoding/csv"
-	"github.com/aziule/tasks/task"
-	"strconv"
+	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
-	"errors"
+	"os"
+	"strconv"
 	"time"
+
+	"github.com/aziule/tasks/task"
 )
 
 const FILE_NAME = "tasks.csv"
 
 func init() {
 	if _, err := os.Stat(FILE_NAME); err != nil {
-		file, err := os.Create(FILE_NAME);
+		file, err := os.Create(FILE_NAME)
 
 		if err != nil {
 			fmt.Println("Impossible to create the file", FILE_NAME)
@@ -84,7 +85,7 @@ func GetByStatus(status string) ([]*task.Task, error) {
 
 		currentTask := csvToTask(record)
 
-		if (currentTask.Status == status) {
+		if currentTask.Status == status {
 			tasks = append(tasks, currentTask)
 		}
 	}
@@ -149,7 +150,7 @@ func Add(t *task.Task) error {
 }
 
 func addMultiple(tasks []*task.Task) error {
-	file, err := os.OpenFile(FILE_NAME, os.O_RDWR | os.O_APPEND, 0660)
+	file, err := os.OpenFile(FILE_NAME, os.O_RDWR|os.O_APPEND, 0660)
 
 	defer file.Close()
 

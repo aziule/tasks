@@ -1,11 +1,12 @@
 package command
 
 import (
-	"github.com/aziule/tasks/storage"
-	"github.com/aziule/tasks/task"
-	"strings"
 	"errors"
 	"fmt"
+	"strings"
+
+	"github.com/aziule/tasks/storage"
+	"github.com/aziule/tasks/task"
 )
 
 type AddCommand struct {

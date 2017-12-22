@@ -2,9 +2,10 @@ package command
 
 import (
 	"errors"
-	"github.com/aziule/tasks/storage"
 	"fmt"
 	"strings"
+
+	"github.com/aziule/tasks/storage"
 )
 
 type EditCommand struct {
